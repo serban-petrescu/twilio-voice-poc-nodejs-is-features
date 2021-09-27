@@ -1,0 +1,50 @@
+
+<html>
+  <head>
+    <title>Demo</title>
+    <script src="//sdk.twilio.com/js/client/releases/1.10.1/twilio.js"></script>
+    <script>
+            
+      async function start() {
+          const response = await fetch("/token");
+          const data = await response.json();
+          device = new Twilio.Device(data.token, {
+            codecPreferences: ["opus", "pcmu"],
+            fakeLocalDTMF: true,
+            enableRingingState: true,
+          });
+
+          device.on("ready", function(device) {
+            console.log("Twilio.Device Ready!");
+          });
+
+          device.on("error", function(error) {
+            console.log("Twilio.Device Error: " + error.message);
+          });
+
+          device.on("connect", function(conn) {
+            console.log("Successfully established call!");
+          });
+
+          device.on("disconnect", function(conn) {
+            console.log("Successfully disconected from call!");
+          });
+
+          device.on("incoming", function(conn) {
+            console.log("Incoming call.");
+            conn.accept(function() {
+              console.log("In call.");
+            });
+
+            setTimeout(() => conn.accept(), 5000);
+          });
+      }
+
+
+    </script>
+  </head>
+  <body >
+    <button onclick="start()">Start</button>
+    <p>Check the developer console</p>
+  </body>
+</html>
