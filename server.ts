@@ -42,9 +42,10 @@ app.all('/enjoy', (request, response) => {
 });
 
 app.all('/long', (request, response) => {
+    const file = request.query.file || 'test.mp3';
     console.log(request.body);
     response.type('text/xml');
-    response.send('<Response><Say voice="alice">A longer message is here!</Say></Response>');
+    response.send(`<Response><Play>${url}/static/${file}</Play></Response>`);
 });
 
 app.get('/token', async (_, response) => {
